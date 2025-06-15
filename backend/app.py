@@ -67,6 +67,51 @@ def index():
 def health_check():
     return jsonify({'status': 'healthy', 'message': 'GharKaKaam API is running'})
 
+# Test route for categories
+@app.route('/api/services/categories', methods=['GET'])
+def get_categories():
+    try:
+        categories = ServiceCategory.query.all()
+        return jsonify({
+            'data': {
+                'categories': [
+                    {
+                        'id': c.id,
+                        'name': c.name,
+                        'description': c.description,
+                        'icon': c.icon,
+                        'is_active': c.is_active,
+                        'created_at': c.created_at.isoformat()
+                    } for c in categories
+                ]
+            }
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# Test route for providers
+@app.route('/api/services/providers', methods=['GET'])
+def get_providers():
+    try:
+        providers = ServiceProvider.query.all()
+        return jsonify({
+            'data': {
+                'providers': [
+                    {
+                        'id': p.id,
+                        'full_name': p.full_name,
+                        'email': p.email,
+                        'phone': p.phone,
+                        'category_id': p.category_id,
+                        'is_verified': p.is_verified,
+                        'created_at': p.created_at.isoformat()
+                    } for p in providers
+                ]
+            }
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 # Start the Flask app
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
